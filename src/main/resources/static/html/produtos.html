@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Cardápio</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+
+        <div class="top-nav">
+            <div class="user-greeting">
+                <p>Bom dia,</p>
+                <strong>Visitante 👋</strong>
+                <a href="index.html" class="logout-link">Fazer Logout</a>
+            </div>
+            <div class="profile-pic">
+                <img src="https://ui-avatars.com/api/?name=Visitante&background=FF6200&color=fff&size=100&bold=true" alt="User" style="border-radius: 50%; width: 50px; height: 50px; border: 2px solid var(--white); box-shadow: var(--shadow-md);">
+            </div>
+        </div>
+
+        <div class="content" style="padding: 0;">
+            <div style="padding: 0 24px;">
+                <h1 class="page-title">O que vamos<br>pedir hoje?</h1>
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Buscar lanches, doces, bebidas..." onkeyup="searchProducts()">
+                </div>
+            </div>
+
+
+            <div class="categories-scroll" id="categoryTabs">
+                <div class="category-pill active" onclick="filterCategory('todos', this)">🔥 Mais Vendidos</div>
+                <div class="category-pill" onclick="filterCategory('salgados', this)">🥟 Salgados</div>
+                <div class="category-pill" onclick="filterCategory('bebidas', this)">🧃 Bebidas</div>
+                <div class="category-pill" onclick="filterCategory('sobremesas', this)">🍫 Sobremesas</div>
+            </div>
+
+
+            <div class="product-grid" id="productGrid">
+                
+                <div class="product-item" data-category="salgados" data-name="coxinha crocante">
+                    <div class="product-img" style="background-color: #FFF0E6;">
+                        <span style="font-size: 3.5rem;">🍗</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Coxinha Crocante</h3>
+                        <p class="product-desc">Recheio frango c/ catupiry</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 6,50</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="salgados" data-name="hamburgao assado">
+                    <div class="product-img" style="background-color: #FDF3D8;">
+                        <span style="font-size: 3.5rem;">🍔</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Hamburgão Assado</h3>
+                        <p class="product-desc">Massa macia com queijo e presunto</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 8,00</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(2)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="salgados" data-name="esfiha de carne">
+                    <div class="product-img" style="background-color: #FEF9E7;">
+                        <span style="font-size: 3.5rem;">🥟</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Esfiha de Carne</h3>
+                        <p class="product-desc">Tradicional com carne temperada</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 5,50</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(5)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="salgados" data-name="risolis de queijo">
+                    <div class="product-img" style="background-color: #FFF0F5;">
+                        <span style="font-size: 3.5rem;">🥟</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Risólis de Queijo</h3>
+                        <p class="product-desc">Massa crocante com muito queijo derretido</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 6,00</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(7)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="bebidas" data-name="refrigerante lata">
+                    <div class="product-img" style="background-color: #E2ECE9;">
+                        <span style="font-size: 3.5rem;">🧃</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Refrigerante Lata</h3>
+                        <p class="product-desc">Natural ou Limão 350ml geladinho</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 5,00</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(3)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="bebidas" data-name="suco natural">
+                    <div class="product-img" style="background-color: #FDF2E9;">
+                        <span style="font-size: 3.5rem;">🍹</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Suco Natural</h3>
+                        <p class="product-desc">Laranja, limão ou maracujá (400ml)</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 7,00</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(6)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="sobremesas" data-name="pudim de leite">
+                    <div class="product-img" style="background-color: #F9EBEA;">
+                        <span style="font-size: 3.5rem;">🍮</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Pudim de Leite</h3>
+                        <p class="product-desc">Com calda de caramelo artesanal</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 8,00</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(4)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="sobremesas" data-name="brownie de chocolate">
+                    <div class="product-img" style="background-color: #F5EEF8;">
+                        <span style="font-size: 3.5rem;">🍫</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Brownie de Chocolate</h3>
+                        <p class="product-desc">Massa úmida com gotas de chocolate</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 7,50</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(8)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-item" data-category="sobremesas" data-name="bala de morango">
+                    <div class="product-img" style="background-color: #FDEDEC;">
+                        <span style="font-size: 3.5rem;">🍬</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Bala de Morango</h3>
+                        <p class="product-desc">Bala tradicional recheada (unidade)</p>
+                        <div class="product-bottom">
+                            <span class="product-price">R$ 0,50</span>
+                            <button class="add-btn" onclick="adicionarAoCarrinho(9)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="bottom-cart-bar" id="cartStickyBar">
+            <div class="cart-info">
+                <div class="cart-icon">🛒</div>
+                <div>
+                    <p class="cart-qtd" id="cartBadgeText">0 itens</p>
+                    <p class="cart-total" id="cartTotalText">R$ 0,00</p>
+                </div>
+            </div>
+            <button class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">Ver Carrinho</button>
+        </div>
+
+    </div>
+    
+    <script src="../js/script.js"></script>
+    <script>
+        // Lógica visual específica desta tela para a barra inferior
+        function refreshBottomCart() {
+            let cart = JSON.parse(localStorage.getItem('lanchexpress_cart')) || [];
+            let totalQty = 0;
+            let totalMs = 0;
+            cart.forEach(i => {
+                totalQty += i.quantidade;
+                totalMs += (i.preco * i.quantidade);
+            });
+            
+            const bar = document.getElementById('cartStickyBar');
+            
+            if(totalQty > 0) {
+                bar.classList.add('visible');
+                document.getElementById('cartBadgeText').innerText = totalQty + (totalQty > 1 ? ' itens' : ' item');
+                document.getElementById('cartTotalText').innerText = 'R$ ' + totalMs.toFixed(2).replace('.', ',');
+            } else {
+                bar.classList.remove('visible');
+            }
+        }
+        
+        // Intercepta add ao carrinho para animar barra sem refresh de tela completo
+        const originalAddToCart = adicionarAoCarrinho;
+        adicionarAoCarrinho = function(id) {
+            originalAddToCart(id);
+            refreshBottomCart();
+        }
+        
+        // Filtro de Categorias
+        function filterCategory(cat, element) {
+            // Atualiza classe ativa na navegação
+            const pills = document.querySelectorAll('.category-pill');
+            pills.forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+            
+            // Filtra os itens do grid
+            const items = document.querySelectorAll('.product-item');
+            items.forEach(item => {
+                // Se categoria for 'todos', exibe tudo. Caso contrário, compara o data-category.
+                if (cat === 'todos' || item.getAttribute('data-category') === cat) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Limpa o campo de busca quando clica na categoria
+            document.getElementById('searchInput').value = '';
+        }
+
+        // Pesquisa em tempo real
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.product-item');
+            
+            // Remove o "ativo" de todas categorias pois virou uma busca livre
+            if(query.length > 0) {
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+            } else {
+                // Se apagar tudo, volta pra "Mais Vendidos" (todos)
+                document.querySelector('.category-pill').classList.add('active');
+            }
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name');
+                if (name.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', refreshBottomCart);
+    </script>
+</body>
+</html>

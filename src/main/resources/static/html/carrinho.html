@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Carrinho</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <div class="header" style="background: transparent;">
+            <a href="produtos.html" class="back-btn">&larr;</a>
+            <h1>Seu Pedido</h1>
+        </div>
+        
+        <div class="content" style="padding: 10px 24px 120px 24px; overflow-y: auto;">
+            <div id="emptyMsg" class="empty-message" style="display: none; padding-top: 50px;">
+                <span style="font-size: 3rem; display: block; margin-bottom: 20px;">🛒</span>
+                <p style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600; margin-bottom: 5px;">Seu carrinho está vazio.</p>
+                <p style="font-size: 0.95rem;">Volte e adicione algumas delícias!</p>
+                <button class="btn btn-outline" style="margin-top: 30px; font-size: 0.95rem; padding: 12px;" onclick="window.location.href='produtos.html'">Explorar Cardápio</button>
+            </div>
+            
+            <div id="cartList" class="cart-list">
+
+            </div>
+        </div>
+
+
+        <div id="checkoutBottomBar" class="bottom-checkout-bar" style="display:none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%;">
+                <span style="color: var(--text-light); font-weight: 600; font-size: 0.95rem;">Total a pagar</span>
+                <span id="cartTotalText" style="color: var(--primary-color); font-weight: 800; font-size: 1.4rem;">R$ 0,00</span>
+            </div>
+            <button id="btnFinalizar" class="btn" style="box-shadow: 0 10px 25px rgba(255, 98, 0, 0.4);" onclick="window.location.href='pagamento.html'">Ir para Pagamento</button>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+</html>

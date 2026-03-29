@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Login</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container" style="justify-content: center; background: url('https://www.transparenttextures.com/patterns/food.png') var(--bg-color); background-blend-mode: multiply;">
+        
+        <div class="content" style="flex: none; padding: 40px 30px; text-align: center; background: var(--white); border-radius: 30px 30px 0 0; margin-top: auto; box-shadow: 0 -4px 20px rgba(0,0,0,0.05);">
+            
+            <div style="margin-top: -80px; margin-bottom: 20px;">
+                <div class="brand-logo" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), #ff8a00); border-radius: 24px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3); transform: rotate(-5deg);">
+                    <span style="font-size: 2.5rem; transform: rotate(5deg);">🥪</span>
+                </div>
+            </div>
+
+            <h1 style="color: var(--text-dark); font-weight: 800; font-size: 1.8rem; margin-bottom: 5px; letter-spacing: -0.5px;">LanchExpress</h1>
+            <p style="color: var(--text-light); margin-bottom: 35px; font-size: 0.95rem;">O fim das filas na cantina.</p>
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); window.location.href='produtos.html';" style="width: 100%; text-align: left;">
+                
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" class="form-control" placeholder="nome@email.com" required>
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" class="form-control" placeholder="••••••••" required>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button type="submit" class="btn">Acessar Cardápio</button>
+                </div>
+            </form>
+            
+            <div style="margin-top: 25px;">
+                <p style="font-size: 0.95rem; color: var(--text-light);">
+                    Primeira vez? <a href="cadastro.html" class="text-link" style="display: inline; margin-top: 0; font-weight: 600;">Cadastre-se grátis</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+</html>

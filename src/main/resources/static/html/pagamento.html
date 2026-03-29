@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Pagamento</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header" style="background: transparent;">
+            <a href="carrinho.html" class="back-btn">&larr;</a>
+            <h1>Pagamento</h1>
+        </div>
+        
+        <div class="content" style="padding-top: 20px;">
+            <p style="font-weight: 600; color: var(--text-dark); font-size: 1.1rem; margin-bottom: 25px; text-align: center;">Escolha sua forma de pagamento</p>
+            
+            <button class="btn" style="margin-bottom: 16px; background: linear-gradient(135deg, #00bdae, #009688); padding: 20px;" onclick="window.location.href='retirada.html'">
+                <span style="font-size: 1.4rem; margin-right: 10px;">💠</span> Pix (Aprovação Rápida)
+            </button>
+            
+            <button class="btn btn-outline" style="margin-bottom: 16px; padding: 20px; color: var(--text-dark); border-color: #E2E8F0; background: var(--white);" onclick="window.location.href='retirada.html'">
+                <span style="font-size: 1.3rem; margin-right: 10px;">💳</span> Cartão de Crédito
+            </button>
+            
+            <button class="btn btn-outline" style="padding: 20px; color: var(--text-dark); border-color: #E2E8F0; background: var(--white);" onclick="window.location.href='retirada.html'">
+                <span style="font-size: 1.3rem; margin-right: 10px;">💳</span> Cartão de Débito
+            </button>
+            
+            <div style="margin-top: 40px; text-align: center; background: #FFF0E6; padding: 15px; border-radius: 16px; color: var(--primary-color);">
+                <p style="font-size: 0.85rem; font-weight: 600;">
+                    🛡️ Protótipo: Seu pedido será gerado como demonstração.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+</html>
