@@ -30,7 +30,7 @@ public class Pedido {
     @Column(nullable = false, unique = true, length = 10)
     private String codigoRetirada;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
