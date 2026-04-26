@@ -1,34 +1,140 @@
+/* ==========================================================
+   LanchExpress - Camada de integração com a API REST (Fase 3)
+   Backend: Spring Boot — base /api
+   ========================================================== */
 
-let carrinho = JSON.parse(localStorage.getItem('lanchexpress_cart')) || [];
+const API_BASE = '/api';
 
-
-const catalogo = [
-  { id: 1, nome: "Coxinha Crocante", preco: 6.50 },
-  { id: 2, nome: "Hamburgão Assado", preco: 8.00 },
-  { id: 3, nome: "Refrigerante Lata", preco: 5.00 },
-  { id: 4, nome: "Pudim de Leite", preco: 8.00 },
-  { id: 5, nome: "Esfiha de Carne", preco: 5.50 },
-  { id: 6, nome: "Suco Natural", preco: 7.00 },
-  { id: 7, nome: "Risólis de Queijo", preco: 6.00 },
-  { id: 8, nome: "Brownie de Chocolate", preco: 7.50 },
-  { id: 9, nome: "Bala de Morango", preco: 0.50 }
-];
-
-
-
-function adicionarAoCarrinho(idProduto) {
-  const produto = catalogo.find(p => p.id === idProduto);
-  if (produto) {
-    const itemExistente = carrinho.find(item => item.id === idProduto);
-    if (itemExistente) {
-      itemExistente.quantidade += 1;
-    } else {
-      carrinho.push({ ...produto, quantidade: 1 });
+const ApiService = {
+  async _request(url, options = {}) {
+    const opts = {
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options
+    };
+    const resp = await fetch(`${API_BASE}${url}`, opts);
+    if (!resp.ok) {
+      let mensagem = `Erro ${resp.status}`;
+      try {
+        const corpo = await resp.json();
+        mensagem = corpo.mensagem || mensagem;
+      } catch (_) { /* corpo vazio */ }
+      throw new Error(mensagem);
     }
-    salvarCarrinho();
-    if(typeof showPremiumAlert !== 'undefined'){ showPremiumAlert(`${produto.nome} adicionado ao carrinho!`); } else { alert(`${produto.nome} adicionado ao carrinho!`); }
+    if (resp.status === 204) return null;
+    return resp.json();
+  },
+
+  // Produtos
+  listarProdutos(categoria) {
+    const qs = categoria && categoria !== 'todos' ? `?categoria=${encodeURIComponent(categoria)}` : '';
+    return this._request(`/produtos${qs}`);
+  },
+  buscarProdutosPorNome(nome) {
+    return this._request(`/produtos?nome=${encodeURIComponent(nome)}`);
+  },
+
+  // Clientes
+  cadastrarCliente(dados) {
+    return this._request('/clientes', { method: 'POST', body: JSON.stringify(dados) });
+  },
+  login(email, senha) {
+    return this._request('/clientes/login', { method: 'POST', body: JSON.stringify({ email, senha }) });
+  },
+  buscarCliente(id) {
+    return this._request(`/clientes/${id}`);
+  },
+  atualizarCliente(id, dados) {
+    return this._request(`/clientes/${id}`, { method: 'PUT', body: JSON.stringify(dados) });
+  },
+  deletarCliente(id) {
+    return this._request(`/clientes/${id}`, { method: 'DELETE' });
+  },
+
+  // Pedidos
+  criarPedido(pedido) {
+    return this._request('/pedidos', { method: 'POST', body: JSON.stringify(pedido) });
+  },
+  buscarPedido(id) {
+    return this._request(`/pedidos/${id}`);
+  },
+  listarPedidosCliente(clienteId) {
+    return this._request(`/pedidos?clienteId=${clienteId}`);
+  },
+  avaliarPedido(id, nota, comentario) {
+    return this._request(`/pedidos/${id}/avaliar`, {
+      method: 'POST',
+      body: JSON.stringify({ nota, comentario })
+    });
   }
+};
+
+/* ==========================================================
+   Helpers globais
+   ========================================================== */
+const StatusLabel = {
+  AGUARDANDO_PAGAMENTO: 'Aguardando pagamento',
+  PAGO: 'Pago',
+  EM_PREPARO: 'Em preparo',
+  PRONTO: 'Pronto p/ retirada',
+  RETIRADO: 'Retirado',
+  CANCELADO: 'Cancelado'
+};
+
+function formatarMoeda(valor) {
+  return 'R$ ' + Number(valor).toFixed(2).replace('.', ',');
 }
+
+function formatarData(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/* ==========================================================
+   Bottom Navigation Bar (injeta automaticamente)
+   Para usar: <body data-bottom-nav="cardapio|historico|sobre|contato|perfil">
+   ========================================================== */
+function injetarBottomNav(ativo) {
+  if (document.querySelector('.bottom-nav')) return;
+  const nav = document.createElement('nav');
+  nav.className = 'bottom-nav';
+  const itens = [
+    { key: 'cardapio',  href: 'produtos.html',  icon: '🍔', label: 'Cardápio' },
+    { key: 'historico', href: 'historico.html', icon: '📋', label: 'Pedidos' },
+    { key: 'sobre',     href: 'sobre.html',     icon: 'ℹ️', label: 'Sobre' },
+    { key: 'contato',   href: 'contato.html',   icon: '✉️', label: 'Contato' },
+    { key: 'perfil',    href: 'perfil.html',    icon: '👤', label: 'Perfil' }
+  ];
+  itens.forEach(it => {
+    const a = document.createElement('a');
+    a.className = 'bottom-nav-item' + (it.key === ativo ? ' active' : '');
+    a.href = it.href;
+    a.innerHTML = `<span class="nav-icon">${it.icon}</span><span>${it.label}</span>`;
+    nav.appendChild(a);
+  });
+  document.body.appendChild(nav);
+  document.querySelectorAll('.content').forEach(c => c.classList.add('has-bottom-nav'));
+}
+
+/* ==========================================================
+   Favoritos (localStorage)
+   ========================================================== */
+const Favoritos = {
+  _key: 'lanchexpress_favoritos',
+  todos() { return JSON.parse(localStorage.getItem(this._key)) || []; },
+  is(id) { return this.todos().includes(id); },
+  toggle(id) {
+    const lista = this.todos();
+    const idx = lista.indexOf(id);
+    if (idx >= 0) lista.splice(idx, 1); else lista.push(id);
+    localStorage.setItem(this._key, JSON.stringify(lista));
+    return idx < 0;
+  }
+};
+
+/* ==========================================================
+   Carrinho local (sincroniza com o backend só na finalização)
+   ========================================================== */
+let carrinho = JSON.parse(localStorage.getItem('lanchexpress_cart')) || [];
 
 function salvarCarrinho() {
   localStorage.setItem('lanchexpress_cart', JSON.stringify(carrinho));
@@ -39,19 +145,36 @@ function limparCarrinho() {
   salvarCarrinho();
 }
 
-
-function alterarQuantidade(idProduto, delta) {
-  const item = carrinho.find(item => item.id === idProduto);
-  if (item) {
-    item.quantidade += delta;
-    if (item.quantidade <= 0) {
-      carrinho = carrinho.filter(i => i.id !== idProduto);
-    }
-    salvarCarrinho();
-    renderizarCarrinho();
+function adicionarAoCarrinho(produto) {
+  if (!produto || !produto.id) return;
+  const itemExistente = carrinho.find(i => i.id === produto.id);
+  if (itemExistente) {
+    itemExistente.quantidade += 1;
+  } else {
+    carrinho.push({
+      id: produto.id,
+      nome: produto.nome,
+      preco: Number(produto.preco),
+      emoji: produto.emoji || '🍽️',
+      quantidade: 1
+    });
+  }
+  salvarCarrinho();
+  if (typeof showPremiumAlert !== 'undefined') {
+    showPremiumAlert(`${produto.nome} adicionado ao carrinho!`);
   }
 }
 
+function alterarQuantidade(idProduto, delta) {
+  const item = carrinho.find(i => i.id === idProduto);
+  if (!item) return;
+  item.quantidade += delta;
+  if (item.quantidade <= 0) {
+    carrinho = carrinho.filter(i => i.id !== idProduto);
+  }
+  salvarCarrinho();
+  renderizarCarrinho();
+}
 
 function renderizarCarrinho() {
   const cartList = document.getElementById('cartList');
@@ -70,21 +193,16 @@ function renderizarCarrinho() {
 
   if (emptyMsg) emptyMsg.style.display = 'none';
   if (bottomBar) bottomBar.style.display = 'flex';
-  
+
   cartList.innerHTML = '';
   let total = 0;
 
   carrinho.forEach(item => {
-    let itemTotal = item.preco * item.quantidade;
-    total += itemTotal;
-
-    const emojis = { 1: '🍗', 2: '🍔', 3: '🧃', 4: '🍮', 5: '🥟', 6: '🍹', 7: '🥟', 8: '🍫', 9: '🍬'};
-    const emoji = emojis[item.id] || '🍽️';
-
+    total += item.preco * item.quantidade;
     const div = document.createElement('div');
     div.className = 'cart-item';
     div.innerHTML = `
-      <div class="cart-item-img">${emoji}</div>
+      <div class="cart-item-img">${item.emoji || '🍽️'}</div>
       <div class="cart-item-details">
         <h4>${item.nome}</h4>
         <span class="price">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
@@ -103,32 +221,9 @@ function renderizarCarrinho() {
   }
 }
 
-
-function gerarCodigo() {
-  const codeDisplay = document.getElementById('codigoRetirada');
-  if (!codeDisplay) return;
-
-
-  if(carrinho.length > 0) {
-    limparCarrinho();
-  }
-
-  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const num = Math.floor(1000 + Math.random() * 9000);
-  const prefixo = letras.charAt(Math.floor(Math.random() * letras.length)) +
-                  letras.charAt(Math.floor(Math.random() * letras.length)) +
-                  letras.charAt(Math.floor(Math.random() * letras.length));
-  
-  codeDisplay.innerText = `${prefixo}-${num}`;
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  renderizarCarrinho();
-  gerarCodigo();
-});
-
-
+/* ==========================================================
+   Alerta visual
+   ========================================================== */
 function showPremiumAlert(message, type = 'success', callback = null) {
   const alertBox = document.createElement('div');
   alertBox.className = `premium-alert alert-${type}`;
@@ -139,12 +234,19 @@ function showPremiumAlert(message, type = 'success', callback = null) {
   document.body.appendChild(alertBox);
 
   setTimeout(() => alertBox.classList.add('show'), 100);
-
   setTimeout(() => {
     alertBox.classList.remove('show');
     setTimeout(() => {
       alertBox.remove();
-      if(callback) callback();
+      if (callback) callback();
     }, 300);
   }, 2500);
 }
+
+/* ==========================================================
+   Inicialização padrão (telas que apenas exibem o carrinho)
+   A retirada.html cria o pedido por conta própria — não disparamos aqui.
+   ========================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  renderizarCarrinho();
+});

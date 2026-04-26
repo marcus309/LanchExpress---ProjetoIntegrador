@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Meu Perfil</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container" style="background: var(--bg-color);">
+
+        <div class="header" style="background: transparent;">
+            <a href="produtos.html" class="back-btn">&larr;</a>
+            <h1>Meu Perfil</h1>
+        </div>
+
+        <div class="content has-bottom-nav" style="padding: 10px 24px 100px 24px;">
+
+            <div style="text-align:center; margin-bottom: 25px;">
+                <img id="perfilAvatar"
+                     src="https://ui-avatars.com/api/?name=Usuario&background=FF6200&color=fff&size=128&bold=true"
+                     alt="Avatar"
+                     style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--white); box-shadow: var(--shadow-md);">
+                <h2 id="perfilNomeHeader" style="margin-top: 12px; font-weight: 800; color: var(--text-dark);">Carregando...</h2>
+                <p id="perfilEmailHeader" style="color: var(--text-light); font-size: 0.9rem; margin-top: 4px;"></p>
+            </div>
+
+            <div id="loadingMsg" style="text-align:center; color: var(--text-light); padding: 30px;">
+                Carregando dados do perfil...
+            </div>
+
+            <form id="perfilForm" style="display:none; width: 100%; text-align: left;">
+
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" class="form-control" required>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="email">E-mail (não editável)</label>
+                    <input type="email" id="email" class="form-control" disabled style="background: #f0f0f0;">
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="instituicao">Instituição</label>
+                    <input type="text" id="instituicao" class="form-control" placeholder="Ex: Senac São Paulo">
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="senha">Nova Senha</label>
+                    <input type="password" id="senha" class="form-control" placeholder="Deixe em branco para manter a atual">
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button type="submit" class="btn" id="btnSalvar">Salvar Alterações</button>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button type="button" class="btn btn-outline" id="btnLogout"
+                            style="color: var(--text-dark); border-color: #E2E8F0; background: var(--white);">
+                        Sair da Conta
+                    </button>
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E2E8F0;">
+                    <p style="font-size: 0.85rem; color: var(--text-light); text-align:center; margin-bottom: 12px;">
+                        Zona de risco
+                    </p>
+                    <button type="button" class="btn btn-outline" id="btnExcluir"
+                            style="color: #c62828; border-color: #ffcdd2; background: var(--white);">
+                        🗑️ Excluir minha conta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        const clienteId = Number(localStorage.getItem('lanchexpress_cliente_id'));
+
+        if (!clienteId) {
+            if (typeof showPremiumAlert !== 'undefined') {
+                showPremiumAlert('Você precisa estar logado para acessar o perfil.', 'error', () => {
+                    window.location.href = 'index.html';
+                });
+            } else {
+                alert('Faça login.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function carregarPerfil() {
+            try {
+                const cliente = await ApiService.buscarCliente(clienteId);
+                document.getElementById('nome').value = cliente.nome || '';
+                document.getElementById('email').value = cliente.email || '';
+                document.getElementById('instituicao').value = cliente.instituicao || '';
+                document.getElementById('perfilNomeHeader').innerText = cliente.nome;
+                document.getElementById('perfilEmailHeader').innerText = cliente.email;
+                document.getElementById('perfilAvatar').src =
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(cliente.nome)}&background=FF6200&color=fff&size=128&bold=true`;
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('perfilForm').style.display = 'block';
+            } catch (err) {
+                document.getElementById('loadingMsg').innerText = 'Erro ao carregar perfil: ' + err.message;
+            }
+        }
+
+        document.getElementById('perfilForm').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = true; btn.innerText = 'Salvando...';
+
+            const dados = {
+                nome: document.getElementById('nome').value.trim(),
+                instituicao: document.getElementById('instituicao').value.trim(),
+                senha: document.getElementById('senha').value
+            };
+
+            try {
+                const atualizado = await ApiService.atualizarCliente(clienteId, dados);
+                localStorage.setItem('lanchexpress_cliente_nome', atualizado.nome);
+                document.getElementById('perfilNomeHeader').innerText = atualizado.nome;
+                document.getElementById('perfilAvatar').src =
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(atualizado.nome)}&background=FF6200&color=fff&size=128&bold=true`;
+                document.getElementById('senha').value = '';
+                showPremiumAlert('Perfil atualizado com sucesso!');
+            } catch (err) {
+                showPremiumAlert(err.message || 'Erro ao salvar.', 'error');
+            } finally {
+                btn.disabled = false; btn.innerText = 'Salvar Alterações';
+            }
+        });
+
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            localStorage.removeItem('lanchexpress_cliente_id');
+            localStorage.removeItem('lanchexpress_cliente_nome');
+            window.location.href = 'index.html';
+        });
+
+        document.getElementById('btnExcluir').addEventListener('click', async () => {
+            const confirmar = confirm('Tem certeza? Esta ação não pode ser desfeita.');
+            if (!confirmar) return;
+            try {
+                await ApiService.deletarCliente(clienteId);
+                localStorage.removeItem('lanchexpress_cliente_id');
+                localStorage.removeItem('lanchexpress_cliente_nome');
+                showPremiumAlert('Conta excluída.', 'success', () => {
+                    window.location.href = 'index.html';
+                });
+            } catch (err) {
+                showPremiumAlert(err.message || 'Erro ao excluir.', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            injetarBottomNav('perfil');
+            carregarPerfil();
+        });
+    </script>
+</body>
+</html>

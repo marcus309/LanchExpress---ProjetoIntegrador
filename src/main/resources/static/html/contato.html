@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Contato</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <div class="header">
+            <a href="produtos.html" class="back-btn">&larr;</a>
+            <h1>Contato</h1>
+        </div>
+
+        <div class="content has-bottom-nav" style="padding: 0 24px 100px 24px;">
+
+            <p style="margin: 10px 0 24px 0;">Tem alguma dúvida, sugestão ou problema? Estamos aqui pra te ajudar.</p>
+
+            <!-- Cards de contato rápido -->
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+
+                <a href="mailto:contato@lanchexpress.com.br" style="text-decoration:none; color:inherit; background: var(--white); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 48px; height: 48px; background: #FFF0E6; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">📧</div>
+                    <div>
+                        <strong style="display:block; font-size:0.95rem;">E-mail</strong>
+                        <span style="font-size:0.85rem; color: var(--text-light);">contato@lanchexpress.com.br</span>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/5511999999999" target="_blank" style="text-decoration:none; color:inherit; background: var(--white); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 48px; height: 48px; background: #E8F5E9; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">📱</div>
+                    <div>
+                        <strong style="display:block; font-size:0.95rem;">WhatsApp</strong>
+                        <span style="font-size:0.85rem; color: var(--text-light);">(11) 99999-9999</span>
+                    </div>
+                </a>
+
+                <div style="background: var(--white); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 48px; height: 48px; background: #E3F2FD; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">📍</div>
+                    <div>
+                        <strong style="display:block; font-size:0.95rem;">Endereço</strong>
+                        <span style="font-size:0.85rem; color: var(--text-light);">Senac SP - Avenida Paulista, 119</span>
+                    </div>
+                </div>
+
+                <div style="background: var(--white); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 48px; height: 48px; background: #FFF3CD; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">⏰</div>
+                    <div>
+                        <strong style="display:block; font-size:0.95rem;">Horário</strong>
+                        <span style="font-size:0.85rem; color: var(--text-light);">Seg a Sex · 08h às 22h</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de mensagem -->
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 14px;">✍️ Envie uma mensagem</h3>
+
+            <form id="contatoForm">
+                <div class="form-group">
+                    <label for="cNome">Seu nome</label>
+                    <input type="text" id="cNome" class="form-control" required>
+                </div>
+                <div class="form-group" style="margin-top: 14px;">
+                    <label for="cEmail">Seu e-mail</label>
+                    <input type="email" id="cEmail" class="form-control" required>
+                </div>
+                <div class="form-group" style="margin-top: 14px;">
+                    <label for="cAssunto">Assunto</label>
+                    <select id="cAssunto" class="form-control" required>
+                        <option value="">Selecione...</option>
+                        <option>Dúvida sobre pedido</option>
+                        <option>Problema com pagamento</option>
+                        <option>Sugestão de melhoria</option>
+                        <option>Quero cadastrar minha cantina</option>
+                        <option>Outro</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 14px;">
+                    <label for="cMensagem">Mensagem</label>
+                    <textarea id="cMensagem" class="form-control" rows="5" required style="resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn" id="btnEnviarContato" style="margin-top: 20px;">Enviar mensagem</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Pré-preenche se logado
+        const nomeLogado = localStorage.getItem('lanchexpress_cliente_nome');
+        if (nomeLogado) document.getElementById('cNome').value = nomeLogado;
+
+        document.getElementById('contatoForm').addEventListener('submit', (ev) => {
+            ev.preventDefault();
+            // Simulação: na fase 4 enviaria para um endpoint /api/contato
+            const btn = document.getElementById('btnEnviarContato');
+            btn.disabled = true; btn.innerText = 'Enviando...';
+            setTimeout(() => {
+                showPremiumAlert('Mensagem recebida! Responderemos em até 24h.');
+                document.getElementById('contatoForm').reset();
+                if (nomeLogado) document.getElementById('cNome').value = nomeLogado;
+                btn.disabled = false; btn.innerText = 'Enviar mensagem';
+            }, 800);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => injetarBottomNav('contato'));
+    </script>
+</body>
+</html>

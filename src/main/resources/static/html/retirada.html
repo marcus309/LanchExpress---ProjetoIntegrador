@@ -7,25 +7,186 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-    <div class="app-container" style="background: var(--primary-color);">
-        <div class="content content-centered" style="background: var(--white); border-radius: 0 0 40px 40px; flex: none; padding-top: 60px; padding-bottom: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-            <div class="success-icon" style="background: #E8F5E9; width: 100px; height: 100px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 3.5rem; color: #4CAF50; margin: 0 auto 20px auto;">✓</div>
-            <h2 style="font-size: 1.8rem; letter-spacing: -1px;">Pedido Confirmado!</h2>
-            <p style="color: var(--text-light); margin-top: 10px; padding: 0 10px;">Seu lanche já está na fila de preparo. Aguarde no balcão.</p>
-        </div>
-        
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px;">
-            <p style="color: var(--white); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;">Sua senha de retirada</p>
-            <div id="codigoRetirada" class="code-box" style="margin: 15px 0; background: var(--white); color: var(--primary-color); border: none; font-size: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    <div class="app-container">
 
+        <div class="content-centered" style="background: linear-gradient(135deg, var(--primary-color), #FF8A00); color:var(--white); padding: 60px 24px 30px 24px; flex: none;">
+            <div style="background: rgba(255,255,255,0.18); width:90px; height:90px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3rem; margin:0 auto 20px auto;">
+                ✓
             </div>
-            <p style="color: rgba(255,255,255,0.8); text-align: center; font-size: 0.9rem; margin-bottom: 40px; max-width: 250px;">
-                Apresente este código quando o painel eletrônico chamar.
-            </p>
-            
-            <button class="btn" style="background: var(--bg-color); color: var(--text-dark); box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="window.location.href='produtos.html'">Fazer um novo pedido</button>
+            <h2 style="color:var(--white); font-size: 1.8rem;">Pedido Confirmado!</h2>
+            <p style="color:rgba(255,255,255,0.9); margin-top: 8px;">Acompanhe o status do seu pedido em tempo real.</p>
+        </div>
+
+        <div class="content" style="padding: 24px; margin-top: -30px;">
+
+            <!-- Card do código de retirada -->
+            <div style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-md); text-align:center; margin-bottom: 20px;">
+                <p style="font-size:0.85rem; color: var(--text-light); text-transform:uppercase; letter-spacing:1px; font-weight:700;">
+                    Sua senha de retirada
+                </p>
+                <div id="codigoRetirada" class="code-box" style="margin: 14px auto 4px auto; display:inline-block;">--</div>
+                <p style="font-size:0.85rem; margin-top: 8px;">
+                    Apresente este código quando o painel chamar.
+                </p>
+            </div>
+
+            <!-- Timeline de status -->
+            <div style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                    <h3 style="font-size:1rem; font-weight:800;">📍 Acompanhamento</h3>
+                    <span id="statusBadge" class="status-badge status-AGUARDANDO_PAGAMENTO">Aguardando</span>
+                </div>
+                <div class="status-timeline" id="timeline">
+                    <div class="timeline-step" data-step="AGUARDANDO_PAGAMENTO">
+                        <div class="step-bullet">💳</div>
+                        <div class="step-text"><strong>Aguardando pagamento</strong><span>Confirmando seu pagamento</span></div>
+                    </div>
+                    <div class="timeline-step" data-step="PAGO">
+                        <div class="step-bullet">✅</div>
+                        <div class="step-text"><strong>Pagamento confirmado</strong><span>Pedido enviado à cantina</span></div>
+                    </div>
+                    <div class="timeline-step" data-step="EM_PREPARO">
+                        <div class="step-bullet">👨‍🍳</div>
+                        <div class="step-text"><strong>Em preparo</strong><span>Sua comida está sendo preparada</span></div>
+                    </div>
+                    <div class="timeline-step" data-step="PRONTO">
+                        <div class="step-bullet">🛎️</div>
+                        <div class="step-text"><strong>Pronto para retirar</strong><span>Vá até o balcão</span></div>
+                    </div>
+                    <div class="timeline-step" data-step="RETIRADO">
+                        <div class="step-bullet">🎉</div>
+                        <div class="step-text"><strong>Retirado</strong><span>Bom apetite!</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-outline" style="margin-bottom: 12px;" onclick="window.location.href='historico.html'">
+                Ver meus pedidos
+            </button>
+            <button class="btn" onclick="window.location.href='produtos.html'">
+                Fazer um novo pedido
+            </button>
         </div>
     </div>
+
     <script src="../js/script.js"></script>
+    <script>
+        const STATUS_ORDEM = ['AGUARDANDO_PAGAMENTO', 'PAGO', 'EM_PREPARO', 'PRONTO', 'RETIRADO'];
+        let pedidoId = null;
+        let pollHandle = null;
+        let statusAtual = 'AGUARDANDO_PAGAMENTO';
+
+        async function criarPedidoInicial() {
+            const carrinho = JSON.parse(localStorage.getItem('lanchexpress_cart')) || [];
+            if (carrinho.length === 0) {
+                document.getElementById('codigoRetirada').innerText = '---';
+                return;
+            }
+
+            const clienteId = Number(localStorage.getItem('lanchexpress_cliente_id')) || null;
+            const payload = {
+                clienteId,
+                itens: carrinho.map(i => ({ produtoId: i.id, quantidade: i.quantidade }))
+            };
+
+            try {
+                const pedido = await ApiService.criarPedido(payload);
+                pedidoId = pedido.id;
+                localStorage.setItem('lanchexpress_ultimo_pedido', pedidoId);
+                document.getElementById('codigoRetirada').innerText = pedido.codigoRetirada;
+                limparCarrinho();
+                atualizarStatus(pedido.status);
+                iniciarSimulacaoStatus();
+            } catch (err) {
+                document.getElementById('codigoRetirada').innerText = 'ERRO';
+                showPremiumAlert('Falha ao registrar pedido: ' + err.message, 'error');
+            }
+        }
+
+        function atualizarStatus(novo) {
+            statusAtual = novo;
+            const idxAtual = STATUS_ORDEM.indexOf(novo);
+            document.querySelectorAll('.timeline-step').forEach(step => {
+                const idxStep = STATUS_ORDEM.indexOf(step.dataset.step);
+                step.classList.remove('done', 'current');
+                if (idxStep < idxAtual) step.classList.add('done');
+                if (idxStep === idxAtual) step.classList.add('current');
+            });
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'status-badge status-' + novo;
+            badge.innerText = StatusLabel[novo] || novo;
+
+            if (novo === 'PRONTO') {
+                showPremiumAlert('🛎️ Seu pedido está pronto! Vá até o balcão.');
+            }
+            if (novo === 'RETIRADO' && pedidoId) {
+                clearInterval(pollHandle);
+                setTimeout(() => abrirAvaliacao(pedidoId), 1500);
+            }
+        }
+
+        // Simulação de avanço de status (na realidade, viria do funcionário da cantina via PATCH).
+        // Aqui simulamos a evolução para fins de demonstração.
+        function iniciarSimulacaoStatus() {
+            const transicoes = [
+                { proximo: 'PAGO', delay: 2500 },
+                { proximo: 'EM_PREPARO', delay: 5000 },
+                { proximo: 'PRONTO', delay: 8000 },
+                { proximo: 'RETIRADO', delay: 12000 }
+            ];
+            transicoes.forEach(t => {
+                setTimeout(() => atualizarStatus(t.proximo), t.delay);
+            });
+        }
+
+        function abrirAvaliacao(idPedido) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.innerHTML = `
+                <div class="modal-sheet" style="position:relative; text-align:center;">
+                    <div class="modal-handle"></div>
+                    <button class="modal-close" id="closeAv">✕</button>
+                    <div style="font-size: 3rem;">🎉</div>
+                    <h2 style="margin-top: 8px;">Como foi sua experiência?</h2>
+                    <p style="margin-bottom: 24px;">Sua avaliação ajuda a cantina a melhorar.</p>
+                    <div class="star-rating" id="estrelas" style="justify-content:center; width:100%;">
+                        ${[1,2,3,4,5].map(n => `<span class="star" data-n="${n}">★</span>`).join('')}
+                    </div>
+                    <div class="form-group" style="margin-top:24px; text-align:left;">
+                        <label>Conte mais (opcional)</label>
+                        <textarea id="comentarioAv" class="form-control" rows="3" style="resize:vertical;"></textarea>
+                    </div>
+                    <button class="btn" style="margin-top:20px;" id="btnEnviarAv">Enviar avaliação</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => overlay.classList.add('show'));
+
+            let nota = 0;
+            const stars = overlay.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    nota = Number(star.dataset.n);
+                    stars.forEach(s => s.classList.toggle('filled', Number(s.dataset.n) <= nota));
+                });
+            });
+
+            const fechar = () => { overlay.classList.remove('show'); setTimeout(() => overlay.remove(), 300); };
+            overlay.querySelector('#closeAv').addEventListener('click', fechar);
+
+            overlay.querySelector('#btnEnviarAv').addEventListener('click', async () => {
+                if (nota === 0) { showPremiumAlert('Escolha uma nota.', 'error'); return; }
+                try {
+                    await ApiService.avaliarPedido(idPedido, nota, overlay.querySelector('#comentarioAv').value);
+                    fechar();
+                    showPremiumAlert('Obrigado pela sua avaliação! 🙏');
+                } catch (err) {
+                    showPremiumAlert(err.message, 'error');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', criarPedidoInicial);
+    </script>
 </body>
 </html>

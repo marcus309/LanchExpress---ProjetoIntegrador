@@ -241,3 +241,237 @@ p { color: var(--text-light); font-size: 0.95rem; line-height: 1.5; }
 }
 .alert-icon { font-size: 1.2rem; }
 .alert-msg { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); white-space: nowrap; }
+.premium-alert.alert-error { border-color: #ffcdd2; }
+.premium-alert.alert-error .alert-msg { color: #c62828; }
+.premium-alert.alert-info .alert-msg { color: #1565c0; }
+
+
+/* ==========================================================
+   BOTTOM NAVIGATION BAR (fixa no rodapé do app)
+   ========================================================== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 414px;
+  background: var(--white);
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 12px 8px 24px 8px;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.06);
+  border-top: 1px solid #F1F5F9;
+  z-index: 90;
+}
+.bottom-nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-decoration: none; color: var(--text-light); font-size: 0.7rem; font-weight: 600;
+  padding: 6px 4px; border-radius: 12px; transition: var(--transition);
+  cursor: pointer; background: none; border: none;
+}
+.bottom-nav-item .nav-icon { font-size: 1.4rem; line-height: 1; }
+.bottom-nav-item.active { color: var(--primary-color); }
+.bottom-nav-item.active .nav-icon { transform: scale(1.15); }
+.bottom-nav-item:hover { color: var(--primary-color); }
+
+/* Quando há bottom-nav, dá margem inferior pro conteúdo não ficar oculto */
+.has-bottom-nav { padding-bottom: 100px !important; }
+
+
+/* ==========================================================
+   MODAL / BOTTOM SHEET
+   ========================================================== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-sheet {
+  width: 100%; max-width: 414px;
+  background: var(--white);
+  border-radius: 30px 30px 0 0;
+  padding: 24px;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height: 85vh; overflow-y: auto;
+}
+.modal-overlay.show .modal-sheet { transform: translateY(0); }
+.modal-handle {
+  width: 40px; height: 4px; background: #E2E8F0;
+  border-radius: 2px; margin: 0 auto 20px auto;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 24px;
+  background: #F1F5F9; border: none; width: 36px; height: 36px;
+  border-radius: 50%; font-size: 1.1rem; cursor: pointer; color: var(--text-dark);
+}
+
+
+/* ==========================================================
+   SKELETON LOADER
+   ========================================================== */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.4s ease-in-out infinite;
+  border-radius: 12px;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-card {
+  display: flex; background: var(--white); border-radius: 24px; padding: 16px;
+  gap: 16px; align-items: center; margin-bottom: 16px; box-shadow: var(--shadow-sm);
+}
+.skeleton-img { width: 85px; height: 85px; border-radius: 20px; }
+.skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.skeleton-line { height: 14px; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.w-50 { width: 50%; }
+.skeleton-line.w-90 { width: 90%; }
+
+
+/* ==========================================================
+   STATUS BADGE (para pedidos)
+   ========================================================== */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.status-AGUARDANDO_PAGAMENTO { background: #FFF3CD; color: #856404; }
+.status-PAGO              { background: #D1ECF1; color: #0C5460; }
+.status-EM_PREPARO        { background: #FFE4D6; color: #C84B00; }
+.status-PRONTO            { background: #D4EDDA; color: #155724; }
+.status-RETIRADO          { background: #E2E3E5; color: #383D41; }
+.status-CANCELADO         { background: #F8D7DA; color: #721C24; }
+
+
+/* ==========================================================
+   ESTRELAS DE AVALIAÇÃO
+   ========================================================== */
+.star-rating { display: inline-flex; gap: 4px; cursor: pointer; }
+.star-rating .star {
+  font-size: 2.2rem; color: #E2E8F0; transition: var(--transition);
+  user-select: none;
+}
+.star-rating .star.filled { color: #FFC107; transform: scale(1.05); }
+.star-rating.readonly { cursor: default; }
+.star-rating.readonly .star { font-size: 1.1rem; }
+
+
+/* ==========================================================
+   TIMELINE DE STATUS DO PEDIDO
+   ========================================================== */
+.status-timeline { display: flex; flex-direction: column; gap: 0; padding: 10px 0; }
+.timeline-step {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 12px 0; position: relative;
+}
+.timeline-step::before {
+  content: ''; position: absolute; left: 16px; top: 40px; bottom: -12px;
+  width: 2px; background: #E2E8F0;
+}
+.timeline-step:last-child::before { display: none; }
+.timeline-step .step-bullet {
+  width: 34px; height: 34px; border-radius: 50%; background: #F1F5F9;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0; z-index: 1;
+}
+.timeline-step.done .step-bullet { background: #D4EDDA; color: #155724; }
+.timeline-step.current .step-bullet { background: var(--primary-color); color: var(--white); animation: pulse 1.5s infinite; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 98, 0, 0.5); }
+  50%      { box-shadow: 0 0 0 12px rgba(255, 98, 0, 0); }
+}
+.timeline-step .step-text strong { display: block; font-size: 0.95rem; color: var(--text-dark); }
+.timeline-step .step-text span { font-size: 0.8rem; color: var(--text-light); }
+
+
+/* ==========================================================
+   FAVORITO (botão coração no card)
+   ========================================================== */
+.fav-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(255,255,255,0.9); border: none;
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 0.95rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: var(--transition);
+}
+.fav-btn:hover { transform: scale(1.1); }
+.fav-btn.active { color: #E91E63; }
+.product-item { position: relative; }
+
+
+/* ==========================================================
+   QR CODE PIX
+   ========================================================== */
+.pix-card {
+  background: var(--white); border-radius: 24px; padding: 24px;
+  box-shadow: var(--shadow-md); text-align: center;
+  border: 2px dashed #00bdae; margin: 20px 0;
+}
+.pix-qr {
+  display: grid; grid-template-columns: repeat(21, 1fr); gap: 0;
+  width: 200px; height: 200px; margin: 0 auto 16px auto;
+  background: var(--white); padding: 8px; border-radius: 12px;
+  border: 1px solid #E2E8F0;
+}
+.pix-qr div { background: #1E293B; }
+.pix-qr div.empty { background: var(--white); }
+.pix-copy-area {
+  background: #F8F9FB; padding: 14px; border-radius: 12px;
+  font-family: 'Courier New', monospace; font-size: 0.78rem;
+  color: var(--text-dark); word-break: break-all; line-height: 1.4;
+  margin-top: 12px;
+}
+
+
+/* ==========================================================
+   ORDENAÇÃO / FILTRO EXTRA
+   ========================================================== */
+.sort-bar {
+  display: flex; gap: 10px; padding: 0 24px 10px 24px;
+  align-items: center; flex-wrap: wrap;
+}
+.sort-bar select {
+  flex: 1; padding: 10px 14px; border-radius: 12px;
+  border: 1.5px solid #E2E8F0; background: var(--white);
+  font-family: 'Inter', sans-serif; font-size: 0.9rem;
+  color: var(--text-dark); cursor: pointer; outline: none;
+}
+.sort-bar select:focus { border-color: var(--primary-color); }
+
+
+/* ==========================================================
+   STOCK BADGE no card de produto
+   ========================================================== */
+.stock-tag {
+  display: inline-block; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 100px; margin-top: 4px;
+}
+.stock-tag.low { background: #FFE4D6; color: #C84B00; }
+.stock-tag.out { background: #F8D7DA; color: #721C24; }
+.stock-tag.ok  { background: #D4EDDA; color: #155724; }
+
+
+/* ==========================================================
+   FORÇA DA SENHA
+   ========================================================== */
+.password-strength {
+  display: flex; gap: 4px; margin-top: 8px;
+}
+.password-strength .bar {
+  flex: 1; height: 4px; background: #E2E8F0; border-radius: 2px; transition: var(--transition);
+}
+.password-strength.weak   .bar:nth-child(1) { background: #f44336; }
+.password-strength.medium .bar:nth-child(-n+2) { background: #ff9800; }
+.password-strength.strong .bar { background: #4caf50; }
+.password-hint {
+  font-size: 0.78rem; color: var(--text-light); margin-top: 4px;
+}

@@ -20,22 +20,48 @@
             <h1 style="color: var(--text-dark); font-weight: 800; font-size: 1.8rem; margin-bottom: 5px; letter-spacing: -0.5px;">LanchExpress</h1>
             <p style="color: var(--text-light); margin-bottom: 35px; font-size: 0.95rem;">O fim das filas na cantina.</p>
             
-            <form id="loginForm" onsubmit="event.preventDefault(); window.location.href='produtos.html';" style="width: 100%; text-align: left;">
-                
+            <form id="loginForm" style="width: 100%; text-align: left;">
+
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" class="form-control" placeholder="nome@email.com" required>
                 </div>
-                
+
                 <div class="form-group" style="margin-top: 15px;">
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" class="form-control" placeholder="••••••••" required>
                 </div>
-                
+
                 <div style="margin-top: 30px;">
-                    <button type="submit" class="btn">Acessar Cardápio</button>
+                    <button type="submit" class="btn" id="btnLogin">Acessar Cardápio</button>
                 </div>
             </form>
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', async (ev) => {
+                    ev.preventDefault();
+                    const email = document.getElementById('email').value.trim();
+                    const senha = document.getElementById('senha').value;
+
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        showPremiumAlert('E-mail inválido.', 'error'); return;
+                    }
+                    if (senha.length === 0) {
+                        showPremiumAlert('Informe sua senha.', 'error'); return;
+                    }
+
+                    const btn = document.getElementById('btnLogin');
+                    btn.disabled = true; btn.innerText = 'Entrando...';
+                    try {
+                        const cliente = await ApiService.login(email, senha);
+                        localStorage.setItem('lanchexpress_cliente_id', cliente.id);
+                        localStorage.setItem('lanchexpress_cliente_nome', cliente.nome);
+                        window.location.href = 'produtos.html';
+                    } catch (err) {
+                        showPremiumAlert(err.message || 'Falha ao autenticar.', 'error');
+                        btn.disabled = false; btn.innerText = 'Acessar Cardápio';
+                    }
+                });
+            </script>
             
             <div style="margin-top: 25px;">
                 <p style="font-size: 0.95rem; color: var(--text-light);">

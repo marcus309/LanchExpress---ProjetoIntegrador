@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Meus Pedidos</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <div class="header">
+            <a href="produtos.html" class="back-btn">&larr;</a>
+            <h1>Meus Pedidos</h1>
+        </div>
+
+        <div class="content has-bottom-nav" style="padding: 10px 24px 100px 24px;">
+
+            <div id="loadingMsg" style="text-align:center; color: var(--text-light); padding: 40px;">
+                Carregando pedidos...
+            </div>
+
+            <div id="emptyMsg" style="display:none; text-align:center; padding: 60px 20px;">
+                <div style="font-size: 4rem; margin-bottom: 16px;">🍽️</div>
+                <h2>Nenhum pedido ainda</h2>
+                <p style="margin-top: 8px;">Que tal pedir aquele lanche agora?</p>
+                <button class="btn" style="margin-top: 24px;" onclick="window.location.href='produtos.html'">Explorar cardápio</button>
+            </div>
+
+            <div id="listaPedidos"></div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        const clienteId = Number(localStorage.getItem('lanchexpress_cliente_id'));
+        if (!clienteId) {
+            window.location.href = 'index.html';
+        }
+
+        function renderEstrelas(nota) {
+            if (!nota) return '';
+            let html = '<div class="star-rating readonly" style="margin-top:8px;">';
+            for (let i = 1; i <= 5; i++) {
+                html += `<span class="star ${i <= nota ? 'filled' : ''}">★</span>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        async function carregar() {
+            try {
+                const pedidos = await ApiService.listarPedidosCliente(clienteId);
+                document.getElementById('loadingMsg').style.display = 'none';
+
+                if (!pedidos || pedidos.length === 0) {
+                    document.getElementById('emptyMsg').style.display = 'block';
+                    return;
+                }
+
+                const lista = document.getElementById('listaPedidos');
+                lista.innerHTML = '';
+                pedidos.forEach(p => {
+                    const card = document.createElement('div');
+                    card.style.cssText = 'background: var(--white); border-radius: 20px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow-sm); border: 1px solid #F1F5F9;';
+
+                    const itensTexto = (p.itens || []).map(i =>
+                        `${i.quantidade}× ${i.produto.nome}`
+                    ).join(', ');
+
+                    const podeAvaliar = p.status === 'RETIRADO' && !p.avaliacao;
+                    const botaoAvaliar = podeAvaliar
+                        ? `<button class="btn btn-outline" style="padding:10px; font-size:0.9rem; margin-top: 10px;" onclick="abrirAvaliacao(${p.id})">⭐ Avaliar pedido</button>`
+                        : '';
+
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                            <strong style="font-size:1.05rem;">Pedido #${p.codigoRetirada}</strong>
+                            <span class="status-badge status-${p.status}">${StatusLabel[p.status] || p.status}</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:8px;">
+                            ${formatarData(p.dataCriacao)}
+                        </p>
+                        <p style="font-size:0.95rem; color:var(--text-dark); margin-bottom:10px;">${itensTexto}</p>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:var(--primary-color); font-weight:800; font-size:1.15rem;">
+                                ${formatarMoeda(p.valorTotal)}
+                            </span>
+                        </div>
+                        ${renderEstrelas(p.avaliacao)}
+                        ${botaoAvaliar}
+                    `;
+                    lista.appendChild(card);
+                });
+            } catch (err) {
+                document.getElementById('loadingMsg').innerText = 'Erro ao carregar: ' + err.message;
+            }
+        }
+
+        function abrirAvaliacao(pedidoId) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.innerHTML = `
+                <div class="modal-sheet" style="position:relative;">
+                    <div class="modal-handle"></div>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+                    <h2 style="text-align:center; margin-bottom:8px;">Como foi seu pedido?</h2>
+                    <p style="text-align:center; margin-bottom:20px;">Sua avaliação ajuda a cantina a melhorar.</p>
+                    <div class="star-rating" id="estrelas" style="justify-content:center; width:100%;">
+                        ${[1,2,3,4,5].map(n => `<span class="star" data-n="${n}">★</span>`).join('')}
+                    </div>
+                    <div class="form-group" style="margin-top:24px;">
+                        <label>Comentário (opcional)</label>
+                        <textarea id="comentario" class="form-control" rows="3" style="resize:vertical;"></textarea>
+                    </div>
+                    <button class="btn" style="margin-top:20px;" id="btnEnviarAval">Enviar avaliação</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => overlay.classList.add('show'));
+
+            let nota = 0;
+            const stars = overlay.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    nota = Number(star.dataset.n);
+                    stars.forEach(s => s.classList.toggle('filled', Number(s.dataset.n) <= nota));
+                });
+            });
+
+            overlay.querySelector('#btnEnviarAval').addEventListener('click', async () => {
+                if (nota === 0) {
+                    showPremiumAlert('Escolha uma nota.', 'error');
+                    return;
+                }
+                try {
+                    await ApiService.avaliarPedido(pedidoId, nota, overlay.querySelector('#comentario').value);
+                    overlay.remove();
+                    showPremiumAlert('Obrigado por avaliar!');
+                    carregar();
+                } catch (err) {
+                    showPremiumAlert(err.message, 'error');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            injetarBottomNav('historico');
+            carregar();
+        });
+    </script>
+</body>
+</html>

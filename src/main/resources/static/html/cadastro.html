@@ -17,27 +17,82 @@
                 <div style="width: 24px;"></div>
             </div>
             
-            <form id="cadastroForm" onsubmit="event.preventDefault(); if(typeof showPremiumAlert !== 'undefined'){ showPremiumAlert('Cadastro realizado com sucesso!', 'success', () => { window.location.href='index.html'; }); } else { alert('Sucesso'); window.location.href='index.html'; }" style="width: 100%; text-align: left;">
-                
+            <form id="cadastroForm" style="width: 100%; text-align: left;">
+
                 <div class="form-group">
                     <label for="nome">Nome Completo</label>
                     <input type="text" id="nome" class="form-control" placeholder="Como quer ser chamado?" required>
                 </div>
-                
+
                 <div class="form-group" style="margin-top: 15px;">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" class="form-control" placeholder="nome@email.com" required>
                 </div>
-                
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="instituicao">Instituição</label>
+                    <input type="text" id="instituicao" class="form-control" placeholder="Ex: Senac São Paulo">
+                </div>
+
                 <div class="form-group" style="margin-top: 15px;">
                     <label for="senha">Criar Senha</label>
-                    <input type="password" id="senha" class="form-control" placeholder="••••••••" required>
+                    <input type="password" id="senha" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
+                    <div class="password-strength" id="strengthBar">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                    <p class="password-hint" id="strengthHint">Use letras, números e símbolos para uma senha forte.</p>
                 </div>
-                
+
                 <div style="margin-top: 30px;">
-                    <button type="submit" class="btn">Cadastrar Agora</button>
+                    <button type="submit" class="btn" id="btnCadastrar">Cadastrar Agora</button>
                 </div>
             </form>
+            <script>
+                // Validador de força de senha
+                const senhaInput = document.getElementById('senha');
+                const strengthBar = document.getElementById('strengthBar');
+                const strengthHint = document.getElementById('strengthHint');
+
+                senhaInput.addEventListener('input', () => {
+                    const v = senhaInput.value;
+                    let score = 0;
+                    if (v.length >= 6) score++;
+                    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+                    if (/[0-9]/.test(v) && /[^A-Za-z0-9]/.test(v)) score++;
+
+                    strengthBar.classList.remove('weak', 'medium', 'strong');
+                    if (v.length === 0) { strengthHint.innerText = 'Use letras, números e símbolos para uma senha forte.'; return; }
+                    if (score <= 1) { strengthBar.classList.add('weak');   strengthHint.innerText = '🔴 Senha fraca'; }
+                    else if (score === 2) { strengthBar.classList.add('medium'); strengthHint.innerText = '🟡 Senha média'; }
+                    else { strengthBar.classList.add('strong'); strengthHint.innerText = '🟢 Senha forte'; }
+                });
+
+                document.getElementById('cadastroForm').addEventListener('submit', async (ev) => {
+                    ev.preventDefault();
+
+                    const nome = document.getElementById('nome').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const senha = document.getElementById('senha').value;
+                    const instituicao = document.getElementById('instituicao').value.trim();
+
+                    // Validação
+                    if (nome.length < 2) { showPremiumAlert('Nome muito curto.', 'error'); return; }
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showPremiumAlert('E-mail inválido.', 'error'); return; }
+                    if (senha.length < 6) { showPremiumAlert('A senha deve ter ao menos 6 caracteres.', 'error'); return; }
+
+                    const btn = document.getElementById('btnCadastrar');
+                    btn.disabled = true; btn.innerText = 'Enviando...';
+                    try {
+                        await ApiService.cadastrarCliente({ nome, email, senha, instituicao });
+                        showPremiumAlert('Cadastro realizado com sucesso!', 'success', () => {
+                            window.location.href = 'index.html';
+                        });
+                    } catch (err) {
+                        showPremiumAlert(err.message || 'Falha no cadastro.', 'error');
+                        btn.disabled = false; btn.innerText = 'Cadastrar Agora';
+                    }
+                });
+            </script>
             
             <div style="margin-top: 25px;">
                 <p style="font-size: 0.95rem; color: var(--text-light);">

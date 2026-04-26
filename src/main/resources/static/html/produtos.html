@@ -8,20 +8,18 @@
 </head>
 <body>
     <div class="app-container">
-        
 
         <div class="top-nav">
             <div class="user-greeting">
-                <p>Bom dia,</p>
-                <strong>Visitante 👋</strong>
-                <a href="index.html" class="logout-link">Fazer Logout</a>
+                <p id="saudacaoHora">Olá,</p>
+                <strong id="userGreetingName">Visitante 👋</strong>
             </div>
-            <div class="profile-pic">
-                <img src="https://ui-avatars.com/api/?name=Visitante&background=FF6200&color=fff&size=100&bold=true" alt="User" style="border-radius: 50%; width: 50px; height: 50px; border: 2px solid var(--white); box-shadow: var(--shadow-md);">
+            <div class="profile-pic" style="cursor: pointer;" onclick="window.location.href='perfil.html'" title="Meu Perfil">
+                <img id="topAvatar" src="https://ui-avatars.com/api/?name=Visitante&background=FF6200&color=fff&size=100&bold=true" alt="User" style="border-radius: 50%; width: 50px; height: 50px; border: 2px solid var(--white); box-shadow: var(--shadow-md);">
             </div>
         </div>
 
-        <div class="content" style="padding: 0;">
+        <div class="content has-bottom-nav" style="padding: 0;">
             <div style="padding: 0 24px;">
                 <h1 class="page-title">O que vamos<br>pedir hoje?</h1>
                 <div class="search-bar">
@@ -30,148 +28,27 @@
                 </div>
             </div>
 
-
             <div class="categories-scroll" id="categoryTabs">
-                <div class="category-pill active" onclick="filterCategory('todos', this)">🔥 Mais Vendidos</div>
+                <div class="category-pill active" onclick="filterCategory('todos', this)">🔥 Mais vendidos</div>
+                <div class="category-pill" onclick="filterCategory('favoritos', this)">❤️ Favoritos</div>
                 <div class="category-pill" onclick="filterCategory('salgados', this)">🥟 Salgados</div>
                 <div class="category-pill" onclick="filterCategory('bebidas', this)">🧃 Bebidas</div>
                 <div class="category-pill" onclick="filterCategory('sobremesas', this)">🍫 Sobremesas</div>
             </div>
 
-
-            <div class="product-grid" id="productGrid">
-                
-                <div class="product-item" data-category="salgados" data-name="coxinha crocante">
-                    <div class="product-img" style="background-color: #FFF0E6;">
-                        <span style="font-size: 3.5rem;">🍗</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Coxinha Crocante</h3>
-                        <p class="product-desc">Recheio frango c/ catupiry</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 6,50</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(1)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="salgados" data-name="hamburgao assado">
-                    <div class="product-img" style="background-color: #FDF3D8;">
-                        <span style="font-size: 3.5rem;">🍔</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Hamburgão Assado</h3>
-                        <p class="product-desc">Massa macia com queijo e presunto</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 8,00</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(2)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="salgados" data-name="esfiha de carne">
-                    <div class="product-img" style="background-color: #FEF9E7;">
-                        <span style="font-size: 3.5rem;">🥟</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Esfiha de Carne</h3>
-                        <p class="product-desc">Tradicional com carne temperada</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 5,50</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(5)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="salgados" data-name="risolis de queijo">
-                    <div class="product-img" style="background-color: #FFF0F5;">
-                        <span style="font-size: 3.5rem;">🥟</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Risólis de Queijo</h3>
-                        <p class="product-desc">Massa crocante com muito queijo derretido</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 6,00</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(7)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="bebidas" data-name="refrigerante lata">
-                    <div class="product-img" style="background-color: #E2ECE9;">
-                        <span style="font-size: 3.5rem;">🧃</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Refrigerante Lata</h3>
-                        <p class="product-desc">Natural ou Limão 350ml geladinho</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 5,00</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(3)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="bebidas" data-name="suco natural">
-                    <div class="product-img" style="background-color: #FDF2E9;">
-                        <span style="font-size: 3.5rem;">🍹</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Suco Natural</h3>
-                        <p class="product-desc">Laranja, limão ou maracujá (400ml)</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 7,00</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(6)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="sobremesas" data-name="pudim de leite">
-                    <div class="product-img" style="background-color: #F9EBEA;">
-                        <span style="font-size: 3.5rem;">🍮</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Pudim de Leite</h3>
-                        <p class="product-desc">Com calda de caramelo artesanal</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 8,00</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(4)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="sobremesas" data-name="brownie de chocolate">
-                    <div class="product-img" style="background-color: #F5EEF8;">
-                        <span style="font-size: 3.5rem;">🍫</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Brownie de Chocolate</h3>
-                        <p class="product-desc">Massa úmida com gotas de chocolate</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 7,50</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(8)">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-item" data-category="sobremesas" data-name="bala de morango">
-                    <div class="product-img" style="background-color: #FDEDEC;">
-                        <span style="font-size: 3.5rem;">🍬</span>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">Bala de Morango</h3>
-                        <p class="product-desc">Bala tradicional recheada (unidade)</p>
-                        <div class="product-bottom">
-                            <span class="product-price">R$ 0,50</span>
-                            <button class="add-btn" onclick="adicionarAoCarrinho(9)">+</button>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="sort-bar">
+                <select id="sortSelect" onchange="aplicarOrdenacao()">
+                    <option value="default">Ordenar por: padrão</option>
+                    <option value="preco-asc">Menor preço</option>
+                    <option value="preco-desc">Maior preço</option>
+                    <option value="nome">Nome (A-Z)</option>
+                </select>
             </div>
+
+            <div class="product-grid" id="productGrid"></div>
         </div>
 
-
-        <div class="bottom-cart-bar" id="cartStickyBar">
+        <div class="bottom-cart-bar" id="cartStickyBar" style="bottom: 75px;">
             <div class="cart-info">
                 <div class="cart-icon">🛒</div>
                 <div>
@@ -181,85 +58,259 @@
             </div>
             <button class="btn-ver-carrinho" onclick="window.location.href='carrinho.html'">Ver Carrinho</button>
         </div>
-
     </div>
-    
+
     <script src="../js/script.js"></script>
     <script>
-        // Lógica visual específica desta tela para a barra inferior
+        // === Saudação dinâmica pelo horário ===
+        const hora = new Date().getHours();
+        const saudacao = hora < 12 ? 'Bom dia,' : hora < 18 ? 'Boa tarde,' : 'Boa noite,';
+        document.getElementById('saudacaoHora').innerText = saudacao;
+
+        const nomeCliente = localStorage.getItem('lanchexpress_cliente_nome');
+        if (nomeCliente) {
+            document.getElementById('userGreetingName').innerText = nomeCliente + ' 👋';
+            document.getElementById('topAvatar').src =
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCliente)}&background=FF6200&color=fff&size=100&bold=true`;
+        }
+
+        const CORES_FUNDO = ['#FFF0E6', '#FDF3D8', '#FEF9E7', '#FFF0F5', '#E2ECE9', '#FDF2E9', '#F9EBEA', '#F5EEF8', '#FDEDEC'];
+
+        let produtosCache = [];
+        let categoriaAtual = 'todos';
+        let ordenacaoAtual = 'default';
+
+        function renderSkeleton() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                grid.innerHTML += `
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-img"></div>
+                        <div class="skeleton-lines">
+                            <div class="skeleton skeleton-line w-70"></div>
+                            <div class="skeleton skeleton-line w-90"></div>
+                            <div class="skeleton skeleton-line w-50"></div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        async function carregarProdutos() {
+            renderSkeleton();
+            try {
+                const cat = (categoriaAtual === 'todos' || categoriaAtual === 'favoritos') ? null : categoriaAtual;
+                const dados = await ApiService.listarProdutos(cat);
+                produtosCache = dados;
+                aplicarFiltrosERender();
+            } catch (err) {
+                document.getElementById('productGrid').innerHTML = `
+                    <p style="text-align:center; color:#c00; padding:30px;">
+                        Não foi possível carregar o cardápio. Verifique se o servidor está ativo.
+                    </p>`;
+            }
+        }
+
+        function aplicarFiltrosERender() {
+            let lista = [...produtosCache];
+
+            // filtro favoritos
+            if (categoriaAtual === 'favoritos') {
+                const favs = Favoritos.todos();
+                lista = lista.filter(p => favs.includes(p.id));
+            }
+
+            // ordenação
+            switch (ordenacaoAtual) {
+                case 'preco-asc':  lista.sort((a, b) => a.preco - b.preco); break;
+                case 'preco-desc': lista.sort((a, b) => b.preco - a.preco); break;
+                case 'nome':       lista.sort((a, b) => a.nome.localeCompare(b.nome)); break;
+            }
+
+            renderizarProdutos(lista);
+        }
+
+        function aplicarOrdenacao() {
+            ordenacaoAtual = document.getElementById('sortSelect').value;
+            aplicarFiltrosERender();
+        }
+
+        function renderizarProdutos(lista) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            if (!lista || lista.length === 0) {
+                grid.innerHTML = `<p style="text-align:center; color:var(--text-light); padding:30px;">
+                    ${categoriaAtual === 'favoritos' ? '❤️ Você ainda não tem favoritos.' : 'Nenhum produto encontrado.'}
+                </p>`;
+                return;
+            }
+            lista.forEach((p, idx) => {
+                const cor = CORES_FUNDO[idx % CORES_FUNDO.length];
+                const preco = formatarMoeda(p.preco);
+                const fav = Favoritos.is(p.id);
+
+                let stockTag = '';
+                if (!p.disponivel || p.quantidadeEstoque === 0) {
+                    stockTag = '<span class="stock-tag out">Esgotado</span>';
+                } else if (p.quantidadeEstoque != null && p.quantidadeEstoque <= 5) {
+                    stockTag = `<span class="stock-tag low">Últimas ${p.quantidadeEstoque}</span>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'product-item';
+                card.dataset.id = p.id;
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <button class="fav-btn ${fav ? 'active' : ''}" data-id="${p.id}" title="Favoritar">
+                        ${fav ? '❤️' : '🤍'}
+                    </button>
+                    <div class="product-img" style="background-color: ${cor};">
+                        <span style="font-size: 3.5rem;">${p.emoji || '🍽️'}</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">${p.nome}</h3>
+                        <p class="product-desc">${p.descricao || ''}</p>
+                        <div class="product-bottom">
+                            <div>
+                                <span class="product-price">${preco}</span>
+                                ${stockTag ? '<br>' + stockTag : ''}
+                            </div>
+                            <button class="add-btn" data-id="${p.id}" ${(!p.disponivel || p.quantidadeEstoque === 0) ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : ''}>+</button>
+                        </div>
+                    </div>
+                `;
+                // clique no card abre detalhe
+                card.addEventListener('click', (ev) => {
+                    if (ev.target.closest('.add-btn') || ev.target.closest('.fav-btn')) return;
+                    abrirDetalheProduto(p);
+                });
+                card.querySelector('.add-btn').addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    if (p.disponivel === false || p.quantidadeEstoque === 0) return;
+                    adicionarAoCarrinho(p);
+                    refreshBottomCart();
+                });
+                card.querySelector('.fav-btn').addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    const ativo = Favoritos.toggle(p.id);
+                    ev.currentTarget.classList.toggle('active', ativo);
+                    ev.currentTarget.innerText = ativo ? '❤️' : '🤍';
+                    if (categoriaAtual === 'favoritos') aplicarFiltrosERender();
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        function abrirDetalheProduto(p) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const preco = formatarMoeda(p.preco);
+            const fav = Favoritos.is(p.id);
+            const indisponivel = !p.disponivel || p.quantidadeEstoque === 0;
+            overlay.innerHTML = `
+                <div class="modal-sheet" style="position:relative;">
+                    <div class="modal-handle"></div>
+                    <button class="modal-close" id="closeBtn">✕</button>
+
+                    <div style="text-align:center; padding: 10px 0 20px 0;">
+                        <div style="width:120px; height:120px; margin:0 auto; border-radius:30px;
+                                    background:#FFF0E6; display:flex; align-items:center; justify-content:center;">
+                            <span style="font-size: 5rem;">${p.emoji || '🍽️'}</span>
+                        </div>
+                    </div>
+
+                    <h2 style="font-size:1.5rem; margin-bottom:6px;">${p.nome}</h2>
+                    <p style="font-size:0.95rem; margin-bottom:16px;">${p.descricao || 'Sem descrição.'}</p>
+
+                    <div style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+                        <span style="background:#F1F5F9; padding:6px 12px; border-radius:100px; font-size:0.8rem; font-weight:600;">
+                            ⏱️ ${p.tempoPreparo || '5-10 min'}
+                        </span>
+                        <span style="background:#F1F5F9; padding:6px 12px; border-radius:100px; font-size:0.8rem; font-weight:600; text-transform:capitalize;">
+                            🏷️ ${p.categoria}
+                        </span>
+                        ${indisponivel
+                            ? '<span class="stock-tag out">Esgotado</span>'
+                            : (p.quantidadeEstoque != null && p.quantidadeEstoque <= 10
+                                ? `<span class="stock-tag low">Restam ${p.quantidadeEstoque}</span>`
+                                : '<span class="stock-tag ok">Em estoque</span>')}
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding:18px; background:#F8F9FB; border-radius:18px;">
+                        <span style="color:var(--text-light); font-weight:600;">Total</span>
+                        <span style="color:var(--primary-color); font-weight:800; font-size:1.6rem;">${preco}</span>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn btn-outline" id="favModalBtn" style="flex:0 0 60px; padding:18px; font-size:1.4rem;">
+                            ${fav ? '❤️' : '🤍'}
+                        </button>
+                        <button class="btn" id="addModalBtn" style="flex:1;" ${indisponivel ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                            ${indisponivel ? 'Esgotado' : 'Adicionar ao carrinho'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => overlay.classList.add('show'));
+
+            const fechar = () => { overlay.classList.remove('show'); setTimeout(() => overlay.remove(), 300); };
+            overlay.querySelector('#closeBtn').addEventListener('click', fechar);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) fechar(); });
+
+            overlay.querySelector('#favModalBtn').addEventListener('click', (ev) => {
+                const ativo = Favoritos.toggle(p.id);
+                ev.currentTarget.innerText = ativo ? '❤️' : '🤍';
+                aplicarFiltrosERender();
+            });
+            overlay.querySelector('#addModalBtn').addEventListener('click', () => {
+                if (indisponivel) return;
+                adicionarAoCarrinho(p);
+                refreshBottomCart();
+                fechar();
+            });
+        }
+
         function refreshBottomCart() {
             let cart = JSON.parse(localStorage.getItem('lanchexpress_cart')) || [];
-            let totalQty = 0;
-            let totalMs = 0;
-            cart.forEach(i => {
-                totalQty += i.quantidade;
-                totalMs += (i.preco * i.quantidade);
-            });
-            
+            let totalQty = 0, totalMs = 0;
+            cart.forEach(i => { totalQty += i.quantidade; totalMs += i.preco * i.quantidade; });
             const bar = document.getElementById('cartStickyBar');
-            
-            if(totalQty > 0) {
+            if (totalQty > 0) {
                 bar.classList.add('visible');
                 document.getElementById('cartBadgeText').innerText = totalQty + (totalQty > 1 ? ' itens' : ' item');
-                document.getElementById('cartTotalText').innerText = 'R$ ' + totalMs.toFixed(2).replace('.', ',');
+                document.getElementById('cartTotalText').innerText = formatarMoeda(totalMs);
             } else {
                 bar.classList.remove('visible');
             }
         }
-        
-        // Intercepta add ao carrinho para animar barra sem refresh de tela completo
-        const originalAddToCart = adicionarAoCarrinho;
-        adicionarAoCarrinho = function(id) {
-            originalAddToCart(id);
-            refreshBottomCart();
-        }
-        
-        // Filtro de Categorias
+
         function filterCategory(cat, element) {
-            // Atualiza classe ativa na navegação
-            const pills = document.querySelectorAll('.category-pill');
-            pills.forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
             element.classList.add('active');
-            
-            // Filtra os itens do grid
-            const items = document.querySelectorAll('.product-item');
-            items.forEach(item => {
-                // Se categoria for 'todos', exibe tudo. Caso contrário, compara o data-category.
-                if (cat === 'todos' || item.getAttribute('data-category') === cat) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            // Limpa o campo de busca quando clica na categoria
             document.getElementById('searchInput').value = '';
+            categoriaAtual = cat;
+            if (cat === 'favoritos' || cat === 'todos') {
+                // já temos cache, só re-renderiza
+                aplicarFiltrosERender();
+            } else {
+                carregarProdutos();
+            }
         }
 
-        // Pesquisa em tempo real
         function searchProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const items = document.querySelectorAll('.product-item');
-            
-            // Remove o "ativo" de todas categorias pois virou uma busca livre
-            if(query.length > 0) {
-                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-            } else {
-                // Se apagar tudo, volta pra "Mais Vendidos" (todos)
-                document.querySelector('.category-pill').classList.add('active');
-            }
-
-            items.forEach(item => {
-                const name = item.getAttribute('data-name');
-                if (name.includes(query)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            if (query.length === 0) { aplicarFiltrosERender(); return; }
+            document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+            const filtrado = produtosCache.filter(p => p.nome.toLowerCase().includes(query));
+            renderizarProdutos(filtrado);
         }
-        
-        document.addEventListener('DOMContentLoaded', refreshBottomCart);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            injetarBottomNav('cardapio');
+            carregarProdutos();
+            refreshBottomCart();
+        });
     </script>
 </body>
 </html>

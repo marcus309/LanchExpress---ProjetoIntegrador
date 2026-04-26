@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanchExpress - Sobre nós</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <div class="header">
+            <a href="produtos.html" class="back-btn">&larr;</a>
+            <h1>Sobre nós</h1>
+        </div>
+
+        <div class="content has-bottom-nav" style="padding: 0 24px 100px 24px;">
+
+            <div style="text-align: center; padding: 20px 0 30px 0;">
+                <div style="width: 90px; height: 90px; margin: 0 auto 16px auto;
+                            background: linear-gradient(135deg, var(--primary-color), #ff8a00);
+                            border-radius: 26px; display: flex; align-items: center; justify-content: center;
+                            box-shadow: var(--shadow-lg); transform: rotate(-5deg);">
+                    <span style="font-size: 3rem; transform: rotate(5deg);">🥪</span>
+                </div>
+                <h2 style="font-size: 1.7rem;">LanchExpress</h2>
+                <p style="margin-top: 6px;">O fim das filas na cantina.</p>
+            </div>
+
+            <section style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; color: var(--text-dark);">📖 Nossa história</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px;">
+                    O <strong>LanchExpress</strong> nasceu em 2026 dentro do Projeto Integrador
+                    III do Senac São Paulo, a partir de uma dor real que vivemos todos os dias:
+                    a fila enorme nos 15 minutos de intervalo das aulas.
+                </p>
+                <p style="font-size: 0.95rem; line-height: 1.6;">
+                    A ideia é simples — você pede pelo celular durante a aula, paga digitalmente
+                    e retira na cantina sem fila. A cantina ganha previsibilidade, e você ganha
+                    de volta o que mais importa: tempo para descansar com seus amigos.
+                </p>
+            </section>
+
+            <section style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">🎯 Missão</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6;">
+                    Devolver o intervalo aos estudantes — eliminando filas em cantinas de
+                    escolas e universidades através de tecnologia simples e acessível.
+                </p>
+            </section>
+
+            <section style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">💎 Valores</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="display: flex; gap: 12px; padding: 8px 0;">
+                        <span>⚡</span><span><strong>Agilidade</strong> — pedido em menos de 1 minuto.</span>
+                    </li>
+                    <li style="display: flex; gap: 12px; padding: 8px 0;">
+                        <span>🤝</span><span><strong>Parceria</strong> — somamos com a cantina, não substituímos.</span>
+                    </li>
+                    <li style="display: flex; gap: 12px; padding: 8px 0;">
+                        <span>🌱</span><span><strong>Acessibilidade</strong> — funciona em qualquer celular.</span>
+                    </li>
+                    <li style="display: flex; gap: 12px; padding: 8px 0;">
+                        <span>🔒</span><span><strong>Confiança</strong> — pagamento e dados seguros.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section style="background: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">🛠️ Tecnologia</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6;">
+                    Backend em <strong>Spring Boot 3</strong> + JPA, banco H2 em desenvolvimento
+                    e PostgreSQL em produção. Frontend em HTML5, CSS3 e JavaScript puro,
+                    consumindo a API REST do servidor.
+                </p>
+            </section>
+
+            <section style="background: linear-gradient(135deg, var(--primary-color), #ff8a00); color: var(--white); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;">👥 A equipe</h3>
+                <p style="font-size: 0.95rem; line-height: 1.6; opacity: 0.95;">
+                    Somos um grupo de estudantes do curso de <strong>Análise e
+                    Desenvolvimento de Sistemas</strong> do Senac São Paulo, unidos pelo
+                    desejo de transformar uma frustração diária em uma solução concreta.
+                </p>
+            </section>
+
+            <p style="text-align: center; font-size: 0.8rem; color: var(--text-light); margin-top: 20px;">
+                LanchExpress · v1.0 · 2026<br>Projeto Integrador III · Senac
+            </p>
+        </div>
+    </div>
+    <script src="../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => injetarBottomNav('sobre'));
+    </script>
+</body>
+</html>
